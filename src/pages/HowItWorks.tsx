@@ -16,7 +16,7 @@ export default function HowItWorks() {
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-dark-900/90 z-10" />
           <img
-            src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b0?q=80&w=2560&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1509391366360-1e97d5259d58?q=80&w=2560&auto=format&fit=crop"
             alt="Solar infrastructure"
             className="w-full h-full object-cover"
           />

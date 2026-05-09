@@ -16,7 +16,7 @@ export default function About() {
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-dark-900/70 z-10" />
           <img
-            src="https://images.unsplash.com/photo-1497366754035-e62f8eb83731?q=80&w=2670&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670&auto=format&fit=crop"
             alt="Business professionals discussing strategy"
             className="w-full h-full object-cover"
           />
@@ -70,7 +70,7 @@ export default function About() {
             <FadeIn delay={0.2} className="relative">
               <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl border border-neutral-200">
                 <img
-                  src="https://images.unsplash.com/photo-1460925895917-cbb4737fbe9d?q=80&w=2664&auto=format&fit=crop"
+                  src="https://images.unsplash.com/photo-1611974789855-9c2a0a223690?q=80&w=2670&auto=format&fit=crop"
                   alt="Analysis and growth"
                   className="w-full h-full object-cover"
                 />

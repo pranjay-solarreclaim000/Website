@@ -16,7 +16,7 @@ export default function WhoWeWorkWith() {
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-dark-900/90 z-10" />
           <img 
-            src="https://images.unsplash.com/photo-1620814421259-71d791280c43?q=80&w=2670&auto=format&fit=crop" 
+            src="https://images.unsplash.com/photo-1588508065123-287b28e0141c?q=80&w=2670&auto=format&fit=crop" 
             alt="Solar installation team" 
             className="w-full h-full object-cover"
           />
