@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolarReclaim OS Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>SolarReclaim OS Dashboard</h1>
+
+        <section>
+            <h2>Current State</h2>
+            <pre id="state-view">Loading...</pre>
+            <button onclick="loadState()">Refresh State</button>
+        </section>
+
+        <section>
+            <h2>OS History</h2>
+            <pre id="history-view">Loading...</pre>
+            <button onclick="loadHistory()">Refresh History</button>
+        </section>
+
+        <section>
+            <h2>Agent Matrix</h2>
+            <div id="agent-matrix" class="agent-matrix">
+                <div class="matrix-item">
+                    <span class="matrix-label">Active Agent:</span>
+                    <span id="active-agent" class="matrix-value">Loading...</span>
+                </div>
+                <div class="matrix-item">
+                    <span class="matrix-label">Heartbeat:</span>
+                    <span id="heartbeat" class="heartbeat-indicator"></span>
+                    <span id="last-updated" class="matrix-value">Loading...</span>
+                </div>
+                <div class="matrix-item">
+                    <span class="matrix-label">Task Binding:</span>
+                    <div id="task-binding" class="task-list">Loading...</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Skill Registry</h2>
+            <div id="skill-registry" class="skill-registry">
+                <ul id="registry-list">Loading...</ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Visual Map</h2>
+            <div id="topology-svg"></div>
+        </section>
+    </div>
+
+    <div id="trace-panel" class="hidden">
+        <div class="trace-header">
+            <h3>Execution Trace</h3>
+            <button onclick="closeTrace()">Close</button>
+        </div>
+        <div id="trace-content"></div>
+    </div>
+
+    <script src="app.js" defer></script>
+    <script>
+        async function loadState() {
+            const res = await fetch('/api/state');
+            const data = await res.json();
+            document.getElementById('state-view').textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function loadHistory() {
+            const res = await fetch('/api/history');
+            const data = await res.text();
+            document.getElementById('history-view').textContent = data;
+        }
+
+        async function loadSkills() {
+            const res = await fetch('/api/skills');
+            const data = await res.json();
+            const list = document.getElementById('skills-list');
+            list.innerHTML = '';
+            data.skills.forEach(skill => {
+                const li = document.createElement('li');
+                li.textContent = skill;
+                list.appendChild(li);
+            });
+        }
+
+        async function sendTrigger() {
+            const skill = document.getElementById('skill').value;
+            const goal = document.getElementById('goal').value;
+            const status = document.getElementById('trigger-status');
+
+            status.textContent = 'Sending...';
+            try {
+                const res = await fetch('/api/trigger', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ skill, goal })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    status.textContent = 'Success! Trigger sent.';
+                    loadState();
+                    loadHistory();
+                } else {
+                    status.textContent = 'Error: ' + data.error;
+                }
+            } catch (e) {
+                status.textContent = 'Network error occurred.';
+            }
+        }
+
+        function closeTrace() {
+            document.getElementById('trace-panel').classList.add('hidden');
+        }
+
+        // Initial load
+        loadState();
+        loadHistory();
+        loadSkills();
+    </script>
+</body>
+</html>

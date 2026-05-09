@@ -1,0 +1,317 @@
+body {
+    background-color: #0a0a0c;
+    color: #e0e0e0;
+    font-family: 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 2rem;
+    background: #111114;
+    border-radius: 0;
+    box-shadow: none;
+    color: #e0e0e0;
+    border: 1px solid #222;
+}
+
+section {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #222;
+    padding-bottom: 1rem;
+}
+
+h1, h2 {
+    color: #00d4ff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+pre {
+    background: #1a1a1f;
+    color: #a0a0a0;
+    padding: 1rem;
+    overflow: auto;
+    border-radius: 4px;
+    border: 1px solid #333;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #888;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 0.5rem;
+    background: #1a1a1f;
+    border: 1px solid #333;
+    color: #00d4ff;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    background: #005f73;
+    color: #00d4ff;
+    border: 1px solid #00d4ff;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: #00d4ff;
+    color: #0a0a0c;
+}
+
+/* Topology Graph Styles */
+#topology-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background: #0f0f12;
+    border: 1px solid #222;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.node {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.node circle {
+    fill: #1a1a1f;
+    stroke: #333;
+    stroke-width: 2;
+}
+
+.node text {
+    fill: #888;
+    font-size: 12px;
+    font-weight: bold;
+    text-anchor: middle;
+}
+
+.node.active circle {
+    stroke: #00d4ff;
+    stroke-width: 4;
+    filter: drop-shadow(0 0 8px #00d4ff);
+    fill: #001f3f;
+}
+
+.node.active text {
+    fill: #00d4ff;
+}
+
+.node.completed circle {
+    stroke: #00ff88;
+    fill: #002b1a;
+}
+
+.node.completed text {
+    fill: #00ff88;
+}
+
+.edge {
+    stroke: #333;
+    stroke-width: 2;
+    fill: none;
+    marker-end: url(#arrowhead);
+    transition: stroke 0.3s ease;
+}
+
+.edge.active {
+    stroke: #00d4ff;
+}
+
+/* Trace Panel */
+#trace-panel {
+    position: fixed;
+    right: -400px;
+    top: 0;
+    width: 350px;
+    height: 100vh;
+    background: #111114;
+    border-left: 2px solid #00d4ff;
+    box-shadow: -10px 0 20px rgba(0,0,0,0.5);
+    transition: right 0.3s ease;
+    padding: 2rem;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+#trace-panel.open {
+    right: 0;
+}
+
+#trace-panel h2 {
+    margin-top: 0;
+}
+
+.trace-detail {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #1a1a1f;
+    border-left: 3px solid #00d4ff;
+}
+
+.trace-label {
+    font-size: 0.8rem;
+    color: #888;
+    display: block;
+}
+
+.trace-value {
+    font-size: 1rem;
+    color: #e0e0e0;
+}
+
+.close-trace {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+/* Agent Matrix Styles */
+.agent-matrix {
+    background: #111114;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.matrix-item {
+    background: #1a1a1f;
+    border: 1px solid #333;
+    padding: 1rem;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.matrix-label {
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.matrix-value {
+    font-size: 1.1rem;
+    color: #00d4ff;
+    font-weight: bold;
+}
+
+.heartbeat-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #333;
+    margin-right: 8px;
+}
+
+.pulse {
+    background: #00ff88;
+    box-shadow: 0 0 8px #00ff88;
+    animation: heartbeat 1.5s infinite;
+}
+
+@keyframes heartbeat {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* Skill Registry Styles */
+.skill-registry {
+    background: #111114;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.registry-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.registry-item {
+    background: #1a1a1f;
+    border: 1px solid #333;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.3s ease;
+}
+
+.registry-item:hover {
+    border-color: #00d4ff;
+}
+
+.skill-name {
+    color: #e0e0e0;
+    font-family: inherit;
+}
+
+.invoke-btn {
+    background: #005f73;
+    color: #00d4ff;
+    border: 1px solid #00d4ff;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+}
+
+/* Task List Styles */
+.task-list {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.task-item {
+    background: #1a1a1f;
+    border-left: 3px solid #00d4ff;
+    padding: 0.5rem 1rem;
+    color: #a0a0a0;
+    font-size: 0.9rem;
+}
