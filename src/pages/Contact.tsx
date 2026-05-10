@@ -235,8 +235,9 @@ export default function Contact() {
               <h3 className="text-2xl font-bold mb-8">Direct Contact</h3>
               
               <div className="space-y-6 mb-12">
-                <div>
+                <div className="space-y-2">
                   <a href="mailto:contact@solarreclaim.com" className="text-lg font-medium hover:text-solar-500 transition-colors block">contact@solarreclaim.com</a>
+                  <a href="mailto:pranjay@solarreclaim.com" className="text-lg font-medium hover:text-solar-500 transition-colors block">pranjay@solarreclaim.com</a>
                 </div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-solar-500/10 text-solar-500 text-sm font-bold">
                   <span className="w-2 h-2 rounded-full bg-solar-500 animate-pulse" />

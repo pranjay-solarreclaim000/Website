@@ -178,6 +178,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <h4 className="font-bold mb-6">Contact</h4>
               <ul className="space-y-3 text-sm text-white/60 mb-6">
                 <li><a href="mailto:contact@solarreclaim.com" className="hover:text-solar-500 transition-colors">contact@solarreclaim.com</a></li>
+                <li><a href="mailto:pranjay@solarreclaim.com" className="hover:text-solar-500 transition-colors">pranjay@solarreclaim.com</a></li>
                 <li>Response within 24 hours</li>
               </ul>
               <h4 className="font-bold mb-4">Social</h4>
