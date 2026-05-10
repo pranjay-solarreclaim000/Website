@@ -107,35 +107,20 @@ export default function WhoWeWorkWith() {
 
       {/* The Ideal Partnership Section */}
       <section className="py-24 px-6 bg-light-bg border-t border-neutral-200">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <FadeIn>
-              <Eyebrow>THE IDEAL PARTNERSHIP</Eyebrow>
-              <h2 className="font-display text-4xl font-bold text-dark-900 mb-8">Who Succeeds With Us?</h2>
-              <p className="text-dark-600 text-lg leading-relaxed mb-6">
-                The installers who see the highest ROI from our system don't treat us like a standard third-party vendor. They treat us like their internal reactivation department.
-              </p>
-              <p className="text-dark-600 text-lg leading-relaxed mb-6">
-                They provide quick feedback on appointments, keep us updated on financing changes, and trust our structured 10-touch process to do the heavy lifting.
-              </p>
-              <p className="text-dark-600 text-lg leading-relaxed">
-                If you want a systematic, long-long partner to squeeze every dollar out of your CRM, let's talk.
-              </p>
-            </FadeIn>
-            <FadeIn delay={0.2} className="relative">
-              <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl border border-neutral-200">
-                <img
-                  src="https://images.unsplash.com/photo-1559302995-f0a1bc3f2604?q=80&w=2670&auto=format&fit=crop"
-                  alt="Solar performance monitoring"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -bottom-6 -right-6 bg-solar-500 p-8 rounded-2xl text-white shadow-xl max-w-xs">
-                <div className="text-3xl font-bold mb-1">Win-Win</div>
-                <div className="text-sm text-white/90">Our performance-based model ensures our incentives are perfectly aligned with your growth.</div>
-              </div>
-            </FadeIn>
-          </div>
+        <div className="max-w-3xl mx-auto text-center">
+          <FadeIn>
+            <Eyebrow>THE IDEAL PARTNERSHIP</Eyebrow>
+            <h2 className="font-display text-4xl font-bold text-dark-900 mb-8">Who Succeeds With Us?</h2>
+            <p className="text-dark-600 text-lg leading-relaxed mb-6">
+              The installers who see the highest ROI from our system don't treat us like a standard third-party vendor. They treat us like their internal reactivation department.
+            </p>
+            <p className="text-dark-600 text-lg leading-relaxed mb-6">
+              They provide quick feedback on appointments, keep us updated on financing changes, and trust our structured 10-touch process to do the heavy lifting.
+            </p>
+            <p className="text-dark-600 text-lg leading-relaxed">
+              If you want a systematic, long-term partner to squeeze every dollar out of your CRM, let's talk.
+            </p>
+          </FadeIn>
         </div>
       </section>
 
