@@ -70,7 +70,7 @@ export default function About() {
             <FadeIn delay={0.2} className="relative">
               <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl border border-neutral-200">
                 <img
-                  src="https://images.unsplash.com/photo-1611974789855-9c2a0a223690?q=80&w=2670&auto=format&fit=crop"
+                  src="https://images.unsplash.com/photo-1543286386-713bdd548da4?q=80&w=2670&auto=format&fit=crop"
                   alt="Analysis and growth"
                   className="w-full h-full object-cover"
                 />

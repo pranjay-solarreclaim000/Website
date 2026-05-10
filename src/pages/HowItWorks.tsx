@@ -16,9 +16,9 @@ export default function HowItWorks() {
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-dark-900/90 z-10" />
           <img
-            src="https://images.unsplash.com/photo-1509391366360-1e97d5259d58?q=80&w=2560&auto=format&fit=crop"
-            alt="Solar infrastructure"
-            className="w-full h-full object-cover"
+            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2670&auto=format&fit=crop"
+            alt="Data analytics and performance"
+            className="w-full h-full object-cover opacity-30 mix-blend-overlay"
           />
         </div>
 

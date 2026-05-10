@@ -14,11 +14,11 @@ export default function WhoWeWorkWith() {
       {/* Hero Section */}
       <section className="relative pt-48 pb-32 px-6 overflow-hidden bg-dark-900">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-dark-900/90 z-10" />
+          <div className="absolute inset-0 bg-dark-900/70 z-10" />
           <img 
-            src="https://images.unsplash.com/photo-1588508065123-287b28e0141c?q=80&w=2670&auto=format&fit=crop" 
-            alt="Solar installation team" 
-            className="w-full h-full object-cover"
+            src="https://images.unsplash.com/photo-1497435334941-8c899ee9e8e2?q=80&w=2576&auto=format&fit=crop" 
+            alt="Solar installation professional" 
+            className="w-full h-full object-cover grayscale-[20%]"
           />
         </div>
         
@@ -54,7 +54,7 @@ export default function WhoWeWorkWith() {
               "Offer $0-down financing options to homeowners"
             ].map((item, i) => (
               <FadeIn key={i} delay={i * 0.05} className={`${i % 3 === 0 ? 'bg-dark-900 text-white border-dark-700' : 'bg-white text-dark-900 border-neutral-200'} p-6 rounded-xl border shadow-sm flex items-start gap-4`}>
-                <CheckCircle2 className={`w-6 h-6 shrink-0 ${i % 3 === 0 ? 'text-solar-500' : 'text-solar-500'}`} />
+                <CheckCircle2 className="w-6 h-6 shrink-0 text-solar-500" />
                 <span className="font-medium text-lg">{item}</span>
               </FadeIn>
             ))}
@@ -107,17 +107,35 @@ export default function WhoWeWorkWith() {
 
       {/* The Ideal Partnership Section */}
       <section className="py-24 px-6 bg-light-bg border-t border-neutral-200">
-        <div className="max-w-4xl mx-auto text-center">
-          <FadeIn>
-            <Eyebrow>THE IDEAL PARTNERSHIP</Eyebrow>
-            <h2 className="font-display text-4xl font-bold text-dark-900 mb-8">Who Succeeds With Us?</h2>
-            <p className="text-dark-600 text-lg leading-relaxed mb-6 text-left">
-              The installers who see the highest ROI from our system don't treat us like a standard third-party vendor. They treat us like their internal reactivation department.
-            </p>
-            <p className="text-dark-600 text-lg leading-relaxed text-left">
-              They provide quick feedback on appointments, keep us updated on financing changes, and trust our structured 10-touch process to do the heavy lifting. If you want a systematic, long-term partner to squeeze every dollar out of your CRM, let's talk.
-            </p>
-          </FadeIn>
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <FadeIn>
+              <Eyebrow>THE IDEAL PARTNERSHIP</Eyebrow>
+              <h2 className="font-display text-4xl font-bold text-dark-900 mb-8">Who Succeeds With Us?</h2>
+              <p className="text-dark-600 text-lg leading-relaxed mb-6">
+                The installers who see the highest ROI from our system don't treat us like a standard third-party vendor. They treat us like their internal reactivation department.
+              </p>
+              <p className="text-dark-600 text-lg leading-relaxed mb-6">
+                They provide quick feedback on appointments, keep us updated on financing changes, and trust our structured 10-touch process to do the heavy lifting.
+              </p>
+              <p className="text-dark-600 text-lg leading-relaxed">
+                If you want a systematic, long-long partner to squeeze every dollar out of your CRM, let's talk.
+              </p>
+            </FadeIn>
+            <FadeIn delay={0.2} className="relative">
+              <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl border border-neutral-200">
+                <img
+                  src="https://images.unsplash.com/photo-1559302995-f0a1bc3f2604?q=80&w=2670&auto=format&fit=crop"
+                  alt="Solar performance monitoring"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="absolute -bottom-6 -right-6 bg-solar-500 p-8 rounded-2xl text-white shadow-xl max-w-xs">
+                <div className="text-3xl font-bold mb-1">Win-Win</div>
+                <div className="text-sm text-white/90">Our performance-based model ensures our incentives are perfectly aligned with your growth.</div>
+              </div>
+            </FadeIn>
+          </div>
         </div>
       </section>
 
