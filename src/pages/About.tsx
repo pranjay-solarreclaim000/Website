@@ -38,7 +38,7 @@ export default function About() {
       {/* Mission Section */}
       <section className="py-24 px-6 bg-light-bg">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="max-w-3xl mx-auto text-center">
             <FadeIn>
               <Eyebrow>OUR MISSION</Eyebrow>
               <h2 className="font-display text-4xl md:text-5xl font-bold text-dark-900 mb-6">The Anti-Agency Approach.</h2>
@@ -48,36 +48,23 @@ export default function About() {
               <p className="text-dark-600 text-lg leading-relaxed mb-8">
                 SolarReclaim was founded to flip the script. We don't ask for your trust upfront—we earn it through performance. By focusing exclusively on <strong>lead reactivation</strong>, we help you recover the marketing spend you've already invested.
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-start gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                <div className="flex items-center justify-center gap-3 bg-white p-4 rounded-xl shadow-sm">
                   <CheckCircle2 className="w-6 h-6 text-solar-500 shrink-0" />
                   <span className="text-dark-700 font-medium">Zero Upfront Risk</span>
                 </div>
-                <div className="flex items-start gap-3">
+                <div className="flex items-center justify-center gap-3 bg-white p-4 rounded-xl shadow-sm">
                   <CheckCircle2 className="w-6 h-6 text-solar-500 shrink-0" />
                   <span className="text-dark-700 font-medium">Pure Performance-Based</span>
                 </div>
-                <div className="flex items-start gap-3">
+                <div className="flex items-center justify-center gap-3 bg-white p-4 rounded-xl shadow-sm">
                   <CheckCircle2 className="w-6 h-6 text-solar-500 shrink-0" />
                   <span className="text-dark-700 font-medium">TCPA Compliant Only</span>
                 </div>
-                <div className="flex items-start gap-3">
+                <div className="flex items-center justify-center gap-3 bg-white p-4 rounded-xl shadow-sm">
                   <CheckCircle2 className="w-6 h-6 text-solar-500 shrink-0" />
                   <span className="text-dark-700 font-medium">TX & FL Specialists</span>
                 </div>
-              </div>
-            </FadeIn>
-            <FadeIn delay={0.2} className="relative">
-              <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl border border-neutral-200">
-                <img
-                  src="https://images.unsplash.com/photo-1543286386-713bdd548da4?q=80&w=2670&auto=format&fit=crop"
-                  alt="Analysis and growth"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -bottom-6 -left-6 bg-dark-900 p-8 rounded-2xl text-white shadow-xl max-w-xs">
-                <div className="text-3xl font-bold text-solar-500 mb-1">100%</div>
-                <div className="text-sm text-white/70">Commission-only model. We only win when you install a system.</div>
               </div>
             </FadeIn>
           </div>
