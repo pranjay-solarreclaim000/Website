@@ -15,31 +15,41 @@ app.use(express.json());
 
 // API route to submit audit
 app.post("/api/submit-audit", async (req, res) => {
-  const {
-    timestamp,
-    firstName,
-    lastName,
-    company,
-    email,
-    phone,
-    state,
-    agedLeads,
-    hasCloser,
-    source,
-    additionalInfo,
-  } = req.body;
+  try {
+    if (!req.body) {
+      return res.status(400).json({ error: "Missing request body" });
+    }
 
-  console.log(`[Form Submit] Received audit request from ${firstName} ${lastName} (${email})`);
+    const {
+      timestamp,
+      firstName,
+      lastName,
+      company,
+      email,
+      phone,
+      state,
+      agedLeads,
+      hasCloser,
+      source,
+      additionalInfo,
+    } = req.body;
 
-  const results = {
-    webhookSuccess: false,
-    emailSuccess: false,
-    message: "",
-    error: ""
-  };
+    console.log(`[Form Submit] Received audit request from ${firstName} ${lastName} (${email})`);
 
-  // 1. Submit to Make.com Webhook
-  const webhookUrl = "https://hook.eu1.make.com/c70k60c6cc1k24jen0d1ngtmd1d0d09k";
+    const results = {
+      webhookSuccess: false,
+      emailSuccess: false,
+      message: "",
+      error: ""
+    };
+
+  // 1. Submit to Make.com Webhook - supporting both standard and custom environment variable targets
+  const webhookUrl = process.env.VITE_AUTOMATION_WEBHOOK || 
+                     process.env.AUTOMATION_WEBHOOK || 
+                     "https://hook.eu1.make.com/c70k60c6cc1k24jen0d1ngtmd1d0d09k";
+
+  console.log(`[Webhook] Submitting lead request to: ${webhookUrl}`);
+
   if (typeof fetch !== "undefined") {
     try {
       const webResponse = await fetch(webhookUrl, {
@@ -48,6 +58,20 @@ app.post("/api/submit-audit", async (req, res) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          // 1. Spaced & Capitalized Keys (Matches original HTML name tags, highly compatible with older Make scenarios)
+          "First Name": firstName,
+          "Last Name": lastName,
+          "Company Name": company,
+          "Email": email,
+          "Phone Number": phone,
+          "State": state,
+          "Approx. Aged Leads": agedLeads,
+          "Has Closer?": hasCloser,
+          "How did you hear about us?": source,
+          "Additional Info": additionalInfo,
+          "Timestamp": timestamp,
+
+          // 2. camelCase / Lowercase Keys (Matches properties destructured / JSON keys, compatible with newer mapped fields)
           timestamp,
           firstName,
           lastName,
@@ -59,6 +83,17 @@ app.post("/api/submit-audit", async (req, res) => {
           hasCloser,
           source,
           additionalInfo,
+
+          // 3. snake_case Keys (Added for absolute failsafe database & sheet integrations)
+          "first_name": firstName,
+          "last_name": lastName,
+          "company_name": company,
+          "email_address": email,
+          "phone_number": phone,
+          "approx_aged_leads": agedLeads,
+          "has_closer": hasCloser,
+          "how_did_you_hear_about_us": source,
+          "additional_info": additionalInfo
         }),
       });
 
@@ -242,6 +277,10 @@ app.post("/api/submit-audit", async (req, res) => {
   }
 
   res.json(results);
+  } catch (globalErr: any) {
+    console.error("[Root Handler Error]: Failed processing audit submit", globalErr);
+    res.status(500).json({ error: globalErr.message || "Internal Server Error in audit submit handler" });
+  }
 });
 
 // Serve static build or Vite dev server

@@ -49,7 +49,7 @@ export default function Contact() {
       
     } catch (error: any) {
       console.error("Error submitting form:", error);
-      setErrorMessage("There was an error submitting the form. Please try again later.");
+      setErrorMessage(error.message || "There was an error submitting the form. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
