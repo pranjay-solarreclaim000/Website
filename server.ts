@@ -45,6 +45,7 @@ app.post("/api/submit-audit", async (req, res) => {
 
   // 1. Submit to Make.com Webhook - supporting both standard and custom environment variable targets
   const webhookUrl = process.env.VITE_AUTOMATION_WEBHOOK || 
+                     process.env.VITE_AUTOMATION_WEBHOO || 
                      process.env.AUTOMATION_WEBHOOK || 
                      "https://hook.eu1.make.com/c70k60c6cc1k24jen0d1ngtmd1d0d09k";
 
