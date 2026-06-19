@@ -40,36 +40,40 @@ app.post("/api/submit-audit", async (req, res) => {
 
   // 1. Submit to Make.com Webhook
   const webhookUrl = "https://hook.eu1.make.com/c70k60c6cc1k24jen0d1ngtmd1d0d09k";
-  try {
-    const webResponse = await fetch(webhookUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        timestamp,
-        firstName,
-        lastName,
-        company,
-        email,
-        phone,
-        state,
-        agedLeads,
-        hasCloser,
-        source,
-        additionalInfo,
-      }),
-    });
+  if (typeof fetch !== "undefined") {
+    try {
+      const webResponse = await fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          timestamp,
+          firstName,
+          lastName,
+          company,
+          email,
+          phone,
+          state,
+          agedLeads,
+          hasCloser,
+          source,
+          additionalInfo,
+        }),
+      });
 
-    if (webResponse.ok) {
-      results.webhookSuccess = true;
-      console.log("[Webhook] Successfully posted submission to Make.com");
-    } else {
-      const errorText = await webResponse.text();
-      console.warn(`[Webhook] Make.com returned status ${webResponse.status}: ${errorText}`);
+      if (webResponse.ok) {
+        results.webhookSuccess = true;
+        console.log("[Webhook] Successfully posted submission to Make.com");
+      } else {
+        const errorText = await webResponse.text();
+        console.warn(`[Webhook] Make.com returned status ${webResponse.status}: ${errorText}`);
+      }
+    } catch (err: any) {
+      console.error("[Webhook] Failed to send to Make.com webhook:", err.message);
     }
-  } catch (err: any) {
-    console.error("[Webhook] Failed to send to Make.com webhook:", err.message);
+  } else {
+    console.error("[Webhook] Global fetch is not supported on this Node version. Skipping Make.com POST.");
   }
 
   // 2. Draft the HTML Email Content
@@ -242,17 +246,42 @@ app.post("/api/submit-audit", async (req, res) => {
 
 // Serve static build or Vite dev server
 async function bootstrap() {
-  if (process.env.NODE_ENV !== "production") {
-    console.log("Starting server in development mode with Vite middleware...");
-    const { createServer: createViteServer } = await import("vite");
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: "spa",
-    });
-    app.use(vite.middlewares);
-  } else {
+  // Check if we are running in the compiled server.cjs bundle
+  const isCompiledProduction = typeof __filename !== "undefined" && __filename.endsWith(".cjs");
+  let isDev = process.env.NODE_ENV !== "production" && !isCompiledProduction;
+
+  if (isDev) {
+    try {
+      console.log("Attempting to load Vite dev middleware...");
+      const { createServer: createViteServer } = await import("vite");
+      console.log("Vite loaded successfully. Starting server in development mode...");
+      const vite = await createViteServer({
+        server: { middlewareMode: true },
+        appType: "spa",
+      });
+      app.use(vite.middlewares);
+    } catch (err: any) {
+      console.warn("Vite failed to load dynamically. Falling back to production mode static serving.", err.message);
+      isDev = false;
+    }
+  }
+
+  if (!isDev) {
     console.log("Starting server in production mode serving static files...");
-    const distPath = path.join(process.cwd(), "dist");
+    const possiblePaths = [
+      path.join(process.cwd(), "dist"),
+      __dirname,
+      path.join(__dirname, "..", "dist")
+    ];
+    
+    let distPath = possiblePaths[0];
+    for (const p of possiblePaths) {
+      if (fs.existsSync(path.join(p, "index.html"))) {
+        distPath = p;
+        break;
+      }
+    }
+    console.log(`Serving static files from: ${distPath}`);
     app.use(express.static(distPath));
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
@@ -265,5 +294,5 @@ async function bootstrap() {
 }
 
 bootstrap().catch((err) => {
-  console.error("Error bootstrapping express server:", err);
+  console.error("Critical error bootstrapping express server:", err);
 });
