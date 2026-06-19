@@ -3,6 +3,8 @@ import { motion } from 'motion/react';
 import { Link, useLocation } from 'react-router-dom';
 import { Sun, Menu, X } from 'lucide-react';
 
+import { Logo } from './Logo';
+
 export const FadeIn = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string, key?: React.Key }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -62,6 +64,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { name: 'Services', path: '/services' },
     { name: 'Who We Work With', path: '/who-we-work-with' },
     { name: 'Results', path: '/results' },
+    { name: 'ROI Calculator', path: '/calculator' },
     { name: 'About', path: '/about' },
   ];
 
@@ -71,13 +74,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 backdrop-blur-md border-b border-black/5 py-4' : 'bg-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group">
-            <svg className="w-7 h-7 text-[#A87B20] group-hover:scale-105 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M6 2 A 10 10 0 0 1 6 22" strokeWidth="1.5" />
-              <path d="M6 6 A 6 6 0 0 1 6 18" strokeWidth="2.5" />
-              <path d="M6 10 A 2 2 0 0 1 6 14" strokeWidth="3.5" />
-            </svg>
-            <span className={`font-display text-2xl tracking-tight transition-colors ${isScrolled ? 'text-dark-900' : 'text-white'}`}>
-              <span className="font-light">Solar</span><span className="font-bold">Reclaim</span>
+            <Logo className={`w-8 h-8 group-hover:scale-105 transition-transform ${isScrolled ? 'text-black' : 'text-white'}`} />
+            <span className={`font-serif text-2xl tracking-tight transition-colors ${isScrolled ? 'text-black' : 'text-white'}`}>
+              SolarReclaim
             </span>
           </Link>
           
@@ -141,16 +140,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
             {/* Col 1 */}
             <div>
-              <div className="flex items-center gap-2 mb-6">
-                <svg className="w-7 h-7 text-[#A87B20]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 2 A 10 10 0 0 1 6 22" strokeWidth="1.5" />
-                  <path d="M6 6 A 6 6 0 0 1 6 18" strokeWidth="2.5" />
-                  <path d="M6 10 A 2 2 0 0 1 6 14" strokeWidth="3.5" />
-                </svg>
-                <span className="font-display text-2xl tracking-tight text-white">
-                  <span className="font-light">Solar</span><span className="font-bold">Reclaim</span>
+              <Link to="/" className="flex items-center gap-2 mb-6 hover:opacity-80 transition-opacity w-fit">
+                <Logo className="w-8 h-8 text-white" />
+                <span className="font-serif text-2xl tracking-tight text-white">
+                  SolarReclaim
                 </span>
-              </div>
+              </Link>
               <p className="text-white/60 text-sm leading-relaxed mb-2">
                 Commission-Only Aged Lead Reactivation
               </p>
@@ -168,6 +163,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <li><Link to="/services" className="hover:text-solar-500 transition-colors">Services</Link></li>
                 <li><Link to="/who-we-work-with" className="hover:text-solar-500 transition-colors">Who We Work With</Link></li>
                 <li><Link to="/results" className="hover:text-solar-500 transition-colors">Results</Link></li>
+                <li><Link to="/calculator" className="hover:text-solar-500 transition-colors">ROI Calculator</Link></li>
                 <li><Link to="/about" className="hover:text-solar-500 transition-colors">About</Link></li>
                 <li><Link to="/contact" className="hover:text-solar-500 transition-colors">Contact</Link></li>
               </ul>

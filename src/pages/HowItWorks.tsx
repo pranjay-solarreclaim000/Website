@@ -14,11 +14,11 @@ export default function HowItWorks() {
       {/* Hero Section */}
       <section className="relative pt-48 pb-32 px-6 overflow-hidden bg-dark-900">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-dark-900/90 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-dark-900/50 via-dark-900/75 to-dark-900 z-10" />
           <img
-            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2670&auto=format&fit=crop"
-            alt="Data analytics and performance"
-            className="w-full h-full object-cover opacity-30 mix-blend-overlay"
+            src="https://images.unsplash.com/photo-1509391139328-3bac74857dd2?q=80&w=2670&auto=format&fit=crop"
+            alt="Sunny residential solar installation"
+            className="w-full h-full object-cover opacity-50"
           />
         </div>
 

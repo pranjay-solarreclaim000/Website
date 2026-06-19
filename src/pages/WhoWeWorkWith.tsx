@@ -14,11 +14,11 @@ export default function WhoWeWorkWith() {
       {/* Hero Section */}
       <section className="relative pt-48 pb-32 px-6 overflow-hidden bg-dark-900">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-dark-900/70 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-dark-900/50 via-dark-900/75 to-dark-900 z-10" />
           <img 
-            src="https://images.unsplash.com/photo-1497435334941-8c899ee9e8e2?q=80&w=2576&auto=format&fit=crop" 
-            alt="Solar installation professional" 
-            className="w-full h-full object-cover grayscale-[20%]"
+            src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=2670&auto=format&fit=crop" 
+            alt="Residential solar installation" 
+            className="w-full h-full object-cover opacity-50"
           />
         </div>
         

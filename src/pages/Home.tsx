@@ -178,79 +178,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Case Study Section */}
-      <section className="py-24 px-6 bg-dark-bg text-white" aria-labelledby="case-study-heading">
-        <div className="max-w-7xl mx-auto">
-          <FadeIn className="mb-16">
-            <Eyebrow>BENCHMARK PROJECTION</Eyebrow>
-            <h2 id="case-study-heading" className="font-display text-4xl md:text-5xl font-bold mb-4">The Math Behind the Moat.</h2>
-            <p className="text-white/60 text-lg max-w-2xl">
-              Here is a realistic projection of what happens when you plug 300 dead leads into our reactivation cadence, based on industry averages.
-            </p>
-          </FadeIn>
-
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-10">
-              <FadeIn delay={0.1}>
-                <div className="text-4xl font-display font-bold text-solar-500 mb-2">300</div>
-                <div className="text-lg font-bold text-white">Dead Leads Provided</div>
-              </FadeIn>
-              <FadeIn delay={0.2}>
-                <div className="text-4xl font-display font-bold text-solar-500 mb-2">21</div>
-                <div className="text-lg font-bold text-white mb-1">Appointments Booked</div>
-                <div className="text-xs text-gray-500 italic">7% booking rate on aged data.</div>
-              </FadeIn>
-              <FadeIn delay={0.3}>
-                <div className="text-4xl font-display font-bold text-solar-500 mb-2">14</div>
-                <div className="text-lg font-bold text-white">Qualified Shows</div>
-                <div className="text-xs text-gray-500 italic">66% show rate.</div>
-              </FadeIn>
-              <FadeIn delay={0.4}>
-                <div className="text-4xl font-display font-bold text-solar-500 mb-2">3</div>
-                <div className="text-lg font-bold text-white">Closed Installs</div>
-                <div className="text-xs text-gray-500 italic">21% close rate on shows.</div>
-              </FadeIn>
-            </div>
-
-            <FadeIn delay={0.5}>
-              <div className="bg-dark-900 p-8 rounded-2xl border border-dark-700">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-10 h-10 bg-solar-500/20 rounded-lg flex items-center justify-center">
-                    <Target className="w-5 h-5 text-solar-500" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold">The Projected ROI</h3>
-                    <p className="text-xs text-white/50 uppercase tracking-wider mt-1">Cost Breakdown</p>
-                  </div>
-                </div>
-                
-                <div className="space-y-3 text-white/80 text-sm mb-8">
-                  <div className="flex justify-between border-b border-white/10 pb-2">
-                    <span>14 Shows @ $75/show</span>
-                    <span className="font-bold text-white">$1,050</span>
-                  </div>
-                  <div className="flex justify-between border-b border-white/10 pb-2">
-                    <span>Commission (3% on $60K)</span>
-                    <span className="font-bold text-white">$1,800</span>
-                  </div>
-                  <div className="flex justify-between pt-2">
-                    <span className="font-bold text-white">Total Cost</span>
-                    <span className="font-bold text-solar-500">$2,850</span>
-                  </div>
-                </div>
-
-                <div className="bg-solar-500/10 border border-solar-500/20 rounded-xl p-6 text-center">
-                  <div className="text-sm text-solar-500 font-bold uppercase tracking-wider mb-2">Recovered Revenue</div>
-                  <div className="text-4xl font-display font-bold text-white mb-2">$60,000</div>
-                  <div className="text-sm text-white/60 mb-4">A 21:1 Return on Investment</div>
-                  <div className="text-xs text-white/40 italic leading-tight">
-                    *These figures are benchmark estimates based on industry averages. Actual results will vary based on lead age, market, and closer performance.
-                  </div>
-                </div>
-              </div>
-            </FadeIn>
-          </div>
-        </div>
+      {/* Dynamic ROI Calculator Section */}
+      <section className="bg-light-bg" aria-labelledby="calculator-heading">
+        <RevenueCalculator />
       </section>
 
       {/* 10-Touch Cadence Section */}

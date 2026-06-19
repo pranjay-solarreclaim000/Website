@@ -7,6 +7,7 @@ import HowItWorks from './pages/HowItWorks';
 import WhoWeWorkWith from './pages/WhoWeWorkWith';
 import Results from './pages/Results';
 import Contact from './pages/Contact';
+import Calculator from './pages/Calculator';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/who-we-work-with" element={<WhoWeWorkWith />} />
           <Route path="/results" element={<Results />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/calculator" element={<Calculator />} />
         </Routes>
       </Layout>
     </Router>

@@ -29,10 +29,8 @@ export default function Contact() {
     const timestamp = new Date().toLocaleString();
 
     try {
-      // Send data to Make.com Webhook
-      const webhookUrl = "https://hook.eu1.make.com/c70k60c6cc1k24jen0d1ngtmd1d0d09k";
-      
-      const response = await fetch(webhookUrl, {
+      // Send data to our secure full-stack backend
+      const response = await fetch("/api/submit-audit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +42,7 @@ export default function Contact() {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Make.com Error (${response.status}): ${errorText}`);
+        throw new Error(`Server Error (${response.status}): ${errorText}`);
       }
 
       setIsSubmitted(true);
