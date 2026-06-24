@@ -1,64 +1,68 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { FadeIn, Eyebrow, Button } from '../components/Layout';
-import { CheckCircle2 } from 'lucide-react';
+import { Calendar, CheckCircle2, User, Building2, Phone, Mail, Layers, Database, ChevronRight, AlertCircle } from 'lucide-react';
 
 export default function Contact() {
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    companyName: "",
+    phone: "",
+    email: "",
+    leadCount: "",
+    usesCrm: "",
+    additionalInfo: ""
+  });
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setErrorMessage("");
-    
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    
-    const firstName = formData.get("First Name") as string || "";
-    const lastName = formData.get("Last Name") as string || "";
-    const company = formData.get("Company Name") as string || "";
-    const email = formData.get("Email") as string || "";
-    const phone = formData.get("Phone Number") as string || "";
-    const state = formData.get("State") as string || "";
-    const agedLeads = formData.get("Approx. Aged Leads") as string || "";
-    const hasCloser = formData.get("Has Closer?") as string || "";
-    const source = formData.get("How did you hear about us?") as string || "";
-    const additionalInfo = formData.get("Additional Info") as string || "";
-    const timestamp = new Date().toLocaleString();
-
-    try {
-      // Send data to our secure full-stack backend
-      const response = await fetch("/api/submit-audit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          timestamp, firstName, lastName, company, email, phone, state, agedLeads, hasCloser, source, additionalInfo
-        })
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Server Error (${response.status}): ${errorText}`);
-      }
-
-      setIsSubmitted(true);
-      
-    } catch (error: any) {
-      console.error("Error submitting form:", error);
-      setErrorMessage(error.message || "There was an error submitting the form. Please try again later.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   useEffect(() => {
     document.title = "Contact SolarReclaim | Book a Free Lead Audit";
     document.querySelector('meta[name="description"]')?.setAttribute("content", "Book a free aged lead audit with SolarReclaim. No commitment. We'll tell you what's recoverable in your CRM.");
   }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setErrorMessage("");
+
+    try {
+      const payload = {
+        ...formData,
+        timestamp: new Date().toLocaleString()
+      };
+
+      const response = await fetch("/api/submit-audit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errVal = await response.text();
+        throw new Error(`Server Response: ${response.status} — ${errVal}`);
+      }
+
+      setIsSubmitted(true);
+    } catch (err: any) {
+      console.error("Submission failed:", err);
+      setErrorMessage(err.message || "Failed to submit request. Please try again or reach out directly.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="">
@@ -92,138 +96,215 @@ export default function Contact() {
       <section className="py-24 px-6 bg-light-bg">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-5 gap-12">
           
-          {/* Form */}
+          {/* New Optimized Form Module */}
           <FadeIn className="lg:col-span-3 bg-white p-8 md:p-12 rounded-2xl border border-neutral-200 shadow-sm">
             {isSubmitted ? (
-              <div className="text-center py-12">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <CheckCircle2 className="w-8 h-8 text-green-600" />
+              <motion.div 
+                initial={{ opacity: 0, y: 15 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                className="text-center py-8 space-y-6"
+              >
+                <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto text-green-600 border border-green-200 shadow-sm">
+                  <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-bold text-dark-900 mb-2">Audit Request Received</h3>
-                <p className="text-dark-600 mb-8">Your information has been securely sent to our team.</p>
-                
-                <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-8 mb-8">
-                  <h4 className="font-bold text-dark-900 mb-2">Skip the 24-hour wait.</h4>
-                  <p className="text-sm text-dark-600 mb-6">High-intent? Book your audit directly on our calendar right now.</p>
+                <div>
+                  <h3 className="text-3xl font-bold text-dark-900">Audit Request Received!</h3>
+                  <p className="text-dark-600 mt-2 text-md leading-relaxed">
+                    We've securely received your CRM parameters and will analyze your profile shortly.
+                  </p>
+                </div>
+
+                <div className="bg-solar-500/5 border border-solar-500/20 rounded-2xl p-6 md:p-8 max-w-xl mx-auto my-6 text-left">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-solar-500/10 text-solar-500 text-xs font-bold mb-4">
+                    <Calendar className="w-3.5 h-3.5" /> Skip the 24hr Queues
+                  </span>
+                  <h4 className="font-display font-bold text-dark-900 text-lg md:text-xl mb-2">Want Answers Faster? Book Directly</h4>
+                  <p className="text-sm text-dark-600 leading-relaxed mb-6">
+                    Connect into Pranjay's schedule live to perform your recovering assessment and mapping overview now.
+                  </p>
                   <a 
                     href="https://calendly.com/pranjay-solarreclaim/30min" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-solar-500 text-white font-bold rounded-full hover:bg-solar-600 transition-colors w-full sm:w-auto"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-solar-500 hover:bg-solar-600 text-white font-bold rounded-full transition-all w-full text-center shadow-md hover:shadow-lg"
                   >
-                    Book Time on Calendly
+                    Confirm Calendar Booking <ChevronRight className="w-4 h-4" />
                   </a>
                 </div>
 
                 <button 
-                  onClick={() => setIsSubmitted(false)} 
+                  onClick={() => setIsSubmitted(false)}
                   className="text-dark-400 text-sm font-medium hover:text-dark-600 transition-colors"
                 >
                   Submit another request
                 </button>
-              </div>
+              </motion.div>
             ) : (
-              <form className="space-y-6" onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <h3 className="text-2xl font-bold text-dark-900 mb-2">Lead Recoverability Audit</h3>
+                  <p className="text-neutral-500 text-sm">Tell us about your pipeline context below to get custom audit calculations.</p>
+                </div>
+
+                {errorMessage && (
+                  <div className="flex gap-2 items-start p-4 bg-red-50 text-red-700 border border-red-100 rounded-xl text-sm">
+                    <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
+
                 <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-dark-900">First Name *</label>
-                  <input type="text" name="First Name" className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all" required />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-dark-900">Last Name *</label>
-                  <input type="text" name="Last Name" className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all" required />
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-dark-900">Company Name *</label>
-                  <input type="text" name="Company Name" className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all" required />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-dark-900">Email Address *</label>
-                  <input type="email" name="Email" className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all" required />
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-dark-900">Phone Number *</label>
-                  <div className="relative flex items-center">
-                    <span className="absolute left-4 text-dark-600 font-medium">+1</span>
+                  {/* Full Name */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-dark-900 flex items-center gap-2">
+                      <User className="w-4 h-4 text-neutral-400" /> Full Name *
+                    </label>
                     <input 
-                      type="tel" 
-                      name="Phone Number" 
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all" 
+                      type="text" 
+                      name="fullName" 
                       required 
-                      maxLength={15}
-                      pattern="[0-9]{10,15}"
-                      placeholder="8005551234"
-                      onInput={(e) => {
-                        e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '');
-                      }}
+                      value={formData.fullName}
+                      onChange={handleChange}
+                      placeholder="John Doe"
+                      className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all text-dark-900" 
+                    />
+                  </div>
+
+                  {/* Company Name */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-dark-900 flex items-center gap-2">
+                      <Building2 className="w-4 h-4 text-neutral-400" /> Company Name *
+                    </label>
+                    <input 
+                      type="text" 
+                      name="companyName" 
+                      required 
+                      value={formData.companyName}
+                      onChange={handleChange}
+                      placeholder="Solar Solutions LLC"
+                      className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all text-dark-900" 
                     />
                   </div>
                 </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Phone Num */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-dark-900 flex items-center gap-2">
+                      <Phone className="w-4 h-4 text-neutral-400" /> Phone Number *
+                    </label>
+                    <div className="relative flex items-center">
+                      <span className="absolute left-4 text-neutral-500 font-medium text-sm">+1</span>
+                      <input 
+                        type="tel" 
+                        name="phone" 
+                        required 
+                        value={formData.phone}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/[^0-9]/g, '');
+                          setFormData(prev => ({ ...prev, phone: val }));
+                        }}
+                        maxLength={15}
+                        placeholder="8005551234"
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all text-dark-900" 
+                      />
+                    </div>
+                  </div>
+
+                  {/* Email */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-dark-900 flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-neutral-400" /> Email Address *
+                    </label>
+                    <input 
+                      type="email" 
+                      name="email" 
+                      required 
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="you@company.com"
+                      className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all text-dark-900" 
+                    />
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* No of Leads */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-dark-900 flex items-center gap-2">
+                      <Layers className="w-4 h-4 text-neutral-400" /> Number of Leads *
+                    </label>
+                    <div className="relative">
+                      <select 
+                        name="leadCount" 
+                        required 
+                        value={formData.leadCount}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all text-dark-900 appearance-none cursor-pointer"
+                      >
+                        <option value="">Select list size...</option>
+                        <option value="Under 500 Leads">Under 500 Leads</option>
+                        <option value="500 to 2,000 Leads">500 to 2,000 Leads</option>
+                        <option value="2,000 to 10,000 Leads">2,000 to 10,000 Leads</option>
+                        <option value="10,000 to 50,000 Leads">10,000 to 50,000 Leads</option>
+                        <option value="50,000+ Leads">More than 50,000 Leads</option>
+                      </select>
+                      <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 text-xs">▼</span>
+                    </div>
+                  </div>
+
+                  {/* Do they use CRM? */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-dark-900 flex items-center gap-2">
+                      <Database className="w-4 h-4 text-neutral-400" /> Do you use a CRM? *
+                    </label>
+                    <div className="relative">
+                      <select 
+                        name="usesCrm" 
+                        required 
+                        value={formData.usesCrm}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all text-dark-900 appearance-none cursor-pointer"
+                      >
+                        <option value="">Select CRM usage...</option>
+                        <option value="Yes, actively using CRM">Yes, Active (GoHighLevel/HubSpot/Salesforce)</option>
+                        <option value="Yes, but looking to change CRM">Yes, but seeking options</option>
+                        <option value="No, keeping records manually">No, using manually (CSV/Excels/Sheets)</option>
+                        <option value="No, planning to implement CRM soon">No, but planning to integrate</option>
+                      </select>
+                      <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 text-xs">▼</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Additional Info */}
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-dark-900">State *</label>
-                  <select name="State" required className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all appearance-none">
-                    <option value="">Select State...</option>
-                    <option value="TX">Texas</option>
-                    <option value="FL">Florida</option>
-                    <option value="Other">Other</option>
-                  </select>
+                  <label className="text-sm font-bold text-dark-900 flex items-center gap-2">
+                    Anything else (optional)
+                  </label>
+                  <textarea 
+                    name="additionalInfo" 
+                    rows={4}
+                    value={formData.additionalInfo}
+                    onChange={handleChange}
+                    placeholder="Provide any extra details about lead age, list type, or previous campaigns..."
+                    className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all text-dark-900 resize-none"
+                  ></textarea>
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-dark-900">Approx. aged leads in CRM *</label>
-                <select name="Approx. Aged Leads" required className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all appearance-none">
-                  <option value="">Select volume...</option>
-                  <option value="<100">Under 100</option>
-                  <option value="100-300">100–300</option>
-                  <option value="300-500">300–500</option>
-                  <option value="500-1000">500–1,000</option>
-                  <option value="1000+">1,000+</option>
-                </select>
-              </div>
+                {/* Submit Action Button */}
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full px-8 py-4 bg-solar-500 hover:bg-solar-600 text-white font-bold rounded-full transition-all duration-200 shadow-md hover:shadow-lg hover:translate-y-[-1px] active:translate-y-0 disabled:opacity-75 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 text-md leading-none"
+                >
+                  {isSubmitting ? "Generating Preparation Profile..." : "Book My Free Audit →"}
+                </button>
 
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-dark-900">Do you have a closer on your team? *</label>
-                <select name="Has Closer?" required className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all appearance-none">
-                  <option value="">Select...</option>
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                  <option value="Not sure">Not sure</option>
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-dark-900">How did you hear about us? *</label>
-                <select name="How did you hear about us?" required className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all appearance-none">
-                  <option value="">Select...</option>
-                  <option value="Google">Google</option>
-                  <option value="Referral">Referral</option>
-                  <option value="LinkedIn">LinkedIn</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-dark-900">Anything else (optional)</label>
-                <textarea name="Additional Info" rows={4} className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:border-solar-500 focus:ring-2 focus:ring-solar-500/20 outline-none transition-all resize-none"></textarea>
-              </div>
-
-              <button disabled={isSubmitting} type="submit" className="w-full px-[28px] py-[14px] bg-solar-500 text-white font-semibold rounded-full hover:bg-solar-600 transition-colors duration-200 ease-in-out flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
-                {isSubmitting ? "Submitting..." : "Book My Free Audit"} {!isSubmitting && <span className="text-xl leading-none">→</span>}
-              </button>
-              {errorMessage && (
-                <div className="p-4 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100 text-center">
-                  {errorMessage}
-                </div>
-              )}
-              <p className="text-xs text-gray-500 text-center mt-3">Your information is used only to prepare your free audit. We do not sell or share your data.</p>
-            </form>
+                <p className="text-xs text-neutral-400 text-center">
+                  Your details are confidential & used solely for generating lead recoverability estimations. Never shared.
+                </p>
+              </form>
             )}
           </FadeIn>
 

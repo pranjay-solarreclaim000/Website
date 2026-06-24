@@ -21,20 +21,17 @@ app.post("/api/submit-audit", async (req, res) => {
     }
 
     const {
-      timestamp,
-      firstName,
-      lastName,
-      company,
-      email,
+      fullName,
+      companyName,
       phone,
-      state,
-      agedLeads,
-      hasCloser,
-      source,
+      email,
+      leadCount,
+      usesCrm,
       additionalInfo,
+      timestamp,
     } = req.body;
 
-    console.log(`[Form Submit] Received audit request from ${firstName} ${lastName} (${email})`);
+    console.log(`[Form Submit] Received audit request from ${fullName} (${email || "no-email"})`);
 
     const results = {
       webhookSuccess: false,
@@ -43,15 +40,168 @@ app.post("/api/submit-audit", async (req, res) => {
       error: ""
     };
 
-  // 1. Submit to Make.com Webhook - supporting both standard and custom environment variable targets
-  const webhookUrl = process.env.VITE_AUTOMATION_WEBHOOK || 
-                     process.env.VITE_AUTOMATION_WEBHOO || 
-                     process.env.AUTOMATION_WEBHOOK || 
-                     "https://hook.eu1.make.com/c70k60c6cc1k24jen0d1ngtmd1d0d09k";
+    // 1. Draft the HTML Email Content
+    const emailHtml = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>SolarReclaim — Audit Request Confirmed</title>
+      </head>
+      <body style="margin:0; padding:0; background-color:#EFEEE9;">
+      <center>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#EFEEE9;">
+        <tr>
+          <td align="center" style="padding:32px 16px;">
 
-  console.log(`[Webhook] Submitting lead request to: ${webhookUrl}`);
+            <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#FFFFFF; max-width:600px; border-radius:14px; overflow:hidden; border:1px solid #E5E3DC;">
 
-  if (typeof fetch !== "undefined") {
+              <!-- HEADER / LOGO -->
+              <tr>
+                <td style="background-color:#0E0E10; padding:26px 32px 18px 32px;">
+                  <table role="presentation" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="font-family: Georgia, 'Times New Roman', serif; font-size:21px; color:#FFFFFF; font-weight:bold; letter-spacing:0.2px;">
+                        <span style="color:#F2760D;">●</span>&nbsp; SolarReclaim
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <!-- BADGE -->
+              <tr>
+                <td style="background-color:#0E0E10; padding:0 32px 26px 32px;">
+                  <table role="presentation" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="background-color:#1C1C1E; border:1px solid #333333; border-radius:20px; padding:6px 14px; font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#FFFFFF; letter-spacing:0.4px;">
+                        <span style="color:#F2760D;">●</span>&nbsp; AUDIT REQUEST CONFIRMED
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <!-- INTRO -->
+              <tr>
+                <td style="padding:34px 32px 6px 32px; font-family: Arial, Helvetica, sans-serif;">
+                  <p style="font-size:15px; color:#1A1A1A; line-height:1.6; margin:0 0 16px 0;">Hi ${fullName},</p>
+                  <p style="font-size:15px; color:#1A1A1A; line-height:1.6; margin:0 0 16px 0;">Got your Lead Recoverability Audit request for <strong>${companyName || "your company"}</strong> — thanks for sending it over.</p>
+                  <p style="font-size:15px; color:#1A1A1A; line-height:1.6; margin:0 0 18px 0;">Here's what I've got on your end:</p>
+                </td>
+              </tr>
+
+              <!-- SNAPSHOT CARD -->
+              <tr>
+                <td style="padding:0 32px 6px 32px;">
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F8F7F3; border:1px solid #E8E6DF; border-radius:10px;">
+                    <tr>
+                      <td style="padding:18px 20px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-family: Arial, Helvetica, sans-serif; font-size:14px; color:#1A1A1A;">
+                          <tr>
+                            <td style="padding:6px 0; color:#777771;">Company</td>
+                            <td style="padding:6px 0; text-align:right; font-weight:bold;">${companyName || "N/A"}</td>
+                          </tr>
+                          <tr>
+                            <td style="padding:6px 0; color:#777771; border-top:1px solid #E8E6DF;">Number of Leads</td>
+                            <td style="padding:6px 0; text-align:right; font-weight:bold; border-top:1px solid #E8E6DF;">${leadCount || "N/A"}</td>
+                          </tr>
+                          <tr>
+                            <td style="padding:6px 0; color:#777771; border-top:1px solid #E8E6DF;">CRM in Use</td>
+                            <td style="padding:6px 0; text-align:right; font-weight:bold; border-top:1px solid #E8E6DF;">${usesCrm || "N/A"}</td>
+                          </tr>
+                          <tr>
+                            <td style="padding:6px 0; color:#777771; border-top:1px solid #E8E6DF; vertical-align:top;">Notes</td>
+                            <td style="padding:6px 0; text-align:right; font-weight:bold; border-top:1px solid #E8E6DF;">${additionalInfo || "None"}</td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <!-- NEXT STEPS -->
+              <tr>
+                <td style="padding:22px 32px 6px 32px; font-family: Arial, Helvetica, sans-serif;">
+                  <p style="font-size:15px; color:#1A1A1A; line-height:1.6; margin:0 0 16px 0;">I'm running these numbers against TX/FL recovery benchmarks now. You'll have your custom audit — recoverable lead value, projected booked appointments, and estimated closed revenue — back in your inbox within <strong>24 hours</strong>.</p>
+                  <p style="font-size:15px; color:#1A1A1A; line-height:1.6; margin:0 0 26px 0;">No call needed to get the numbers. When you're ready to walk through them, grab a slot below.</p>
+                </td>
+              </tr>
+
+              <!-- CTA BUTTON -->
+              <tr>
+                <td align="center" style="padding:0 32px 34px 32px;">
+                  <table role="presentation" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="background-color:#F2760D; border-radius:30px;">
+                        <a href="https://calendly.com/solarreclaim" target="_blank" style="display:inline-block; padding:14px 32px; font-family:Arial, Helvetica, sans-serif; font-size:15px; font-weight:bold; color:#FFFFFF; text-decoration:none; border-radius:30px;">Book a Time to Review It →</a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <!-- DIVIDER -->
+              <tr>
+                <td style="padding:0 32px;">
+                  <div style="border-top:1px solid #ECEBE5; line-height:1px; font-size:1px;">&nbsp;</div>
+                </td>
+              </tr>
+
+              <!-- SIGN OFF -->
+              <tr>
+                <td style="padding:24px 32px 30px 32px; font-family: Arial, Helvetica, sans-serif;">
+                  <p style="font-size:15px; color:#1A1A1A; line-height:1.5; margin:0 0 2px 0;">Talk soon,</p>
+                  <p style="font-size:15px; color:#1A1A1A; line-height:1.5; margin:0; font-weight:bold;">Pranjay</p>
+                  <p style="font-size:13px; color:#777771; line-height:1.5; margin:2px 0 0 0;">Founder, SolarReclaim</p>
+                </td>
+              </tr>
+
+              <!-- FOOTER BADGE STRIP (matches site footer) -->
+              <tr>
+                <td style="background-color:#0E0E10; padding:20px 32px;">
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#8C8C86; letter-spacing:0.8px; padding-bottom:8px;">SERVING INSTALLERS IN</td>
+                    </tr>
+                    <tr>
+                      <td style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#D6D5CF; letter-spacing:0.3px;">
+                        TEXAS&nbsp;&nbsp;•&nbsp;&nbsp;FLORIDA&nbsp;&nbsp;•&nbsp;&nbsp;RESIDENTIAL SOLAR&nbsp;&nbsp;•&nbsp;&nbsp;COMMISSION-ONLY&nbsp;&nbsp;•&nbsp;&nbsp;TCPA COMPLIANT
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <!-- LEGAL FOOTER -->
+              <tr>
+                <td align="center" style="background-color:#FFFFFF; padding:20px 32px; font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#9A9A93; line-height:1.6;">
+                  SolarReclaim — Lead Reactivation for TX/FL Solar Installers<br>
+                  You're receiving this because you requested a Lead Recoverability Audit on our site.<br>
+                  Reply "remove" anytime and we'll take care of it.
+                </td>
+              </tr>
+
+            </table>
+
+          </td>
+        </tr>
+      </table>
+      </center>
+      </body>
+      </html>
+    `;
+
+    // 2. Submit to Make.com Webhook
+    const webhookUrl = process.env.VITE_AUTOMATION_WEBHOOK || 
+                       process.env.VITE_AUTOMATION_WEBHOO || 
+                       process.env.AUTOMATION_WEBHOOK || 
+                       "https://hook.eu1.make.com/c70k60c6cc1k24jen0d1ngtmd1d0d09k";
+
+    console.log(`[Webhook] Submitting lead request to: ${webhookUrl}`);
+
     try {
       const webResponse = await fetch(webhookUrl, {
         method: "POST",
@@ -59,42 +209,15 @@ app.post("/api/submit-audit", async (req, res) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // 1. Spaced & Capitalized Keys (Matches original HTML name tags, highly compatible with older Make scenarios)
-          "First Name": firstName,
-          "Last Name": lastName,
-          "Company Name": company,
-          "Email": email,
+          "Timestamp": timestamp || new Date().toLocaleString(),
+          "Full Name": fullName,
+          "Company Name": companyName,
           "Phone Number": phone,
-          "State": state,
-          "Approx. Aged Leads": agedLeads,
-          "Has Closer?": hasCloser,
-          "How did you hear about us?": source,
+          "Email Address": email,
+          "Number of Leads": leadCount,
+          "Uses CRM?": usesCrm,
           "Additional Info": additionalInfo,
-          "Timestamp": timestamp,
-
-          // 2. camelCase / Lowercase Keys (Matches properties destructured / JSON keys, compatible with newer mapped fields)
-          timestamp,
-          firstName,
-          lastName,
-          company,
-          email,
-          phone,
-          state,
-          agedLeads,
-          hasCloser,
-          source,
-          additionalInfo,
-
-          // 3. snake_case Keys (Added for absolute failsafe database & sheet integrations)
-          "first_name": firstName,
-          "last_name": lastName,
-          "company_name": company,
-          "email_address": email,
-          "phone_number": phone,
-          "approx_aged_leads": agedLeads,
-          "has_closer": hasCloser,
-          "how_did_you_hear_about_us": source,
-          "additional_info": additionalInfo
+          "Email HTML": emailHtml
         }),
       });
 
@@ -108,176 +231,92 @@ app.post("/api/submit-audit", async (req, res) => {
     } catch (err: any) {
       console.error("[Webhook] Failed to send to Make.com webhook:", err.message);
     }
-  } else {
-    console.error("[Webhook] Global fetch is not supported on this Node version. Skipping Make.com POST.");
-  }
 
-  // 2. Draft the HTML Email Content
-  const emailHtml = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <title>New Aged Lead Audit Request</title>
-      <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px; }
-        .container { max-width: 600px; background-color: #ffffff; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin: 0 auto; }
-        .header { background-color: #0a0a0a; color: #ffffff; padding: 30px; text-align: center; }
-        .header h1 { margin: 0; font-size: 24px; font-weight: 700; tracking-tight; }
-        .header span { color: #f97316; font-weight: bold; }
-        .content { padding: 30px; color: #1f2937; line-height: 1.6; }
-        .lead-name { font-size: 20px; font-weight: bold; color: #111827; margin-bottom: 20px; border-bottom: 2px solid #f3f4f6; padding-bottom: 10px; }
-        .grid { display: grid; gap: 15px; margin-bottom: 20px; }
-        .field { background: #fafafa; padding: 12px 16px; border-radius: 8px; border: 1px solid #f3f4f6; }
-        .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; font-weight: bold; margin-bottom: 4px; }
-        .value { font-size: 15px; color: #111827; font-weight: 500; }
-        .notes-box { background: #fffaf0; border-left: 4px solid #f97316; padding: 15px; border-radius: 4px; margin-top: 20px; }
-        .notes-title { font-weight: bold; color: #9a3412; margin-bottom: 5px; font-size: 13px; }
-        .footer { background-color: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #9ca3af; border-t: 1px solid #f3f4f6; }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <h1><span>SolarReclaim</span> - Lead Audit Request</h1>
-        </div>
-        <div class="content">
-          <div class="lead-name">${firstName} ${lastName}</div>
-          
-          <div class="grid">
-            <div class="field">
-              <div class="label">Company Name</div>
-              <div class="value">${company || "N/A"}</div>
-            </div>
-            <div class="field">
-              <div class="label">Email Address</div>
-              <div class="value"><a href="mailto:${email}">${email}</a></div>
-            </div>
-            <div class="field">
-              <div class="label">Phone Number</div>
-              <div class="value">+1 ${phone}</div>
-            </div>
-            <div class="field">
-              <div class="label">State</div>
-              <div class="value">${state || "N/A"}</div>
-            </div>
-            <div class="field">
-              <div class="label">Approx. Aged Leads</div>
-              <div class="value">${agedLeads || "N/A"}</div>
-            </div>
-            <div class="field">
-              <div class="label">Has Closer on Team?</div>
-              <div class="value">${hasCloser || "N/A"}</div>
-            </div>
-            <div class="field">
-              <div class="label">Traffic Source</div>
-              <div class="value">${source || "N/A"}</div>
-            </div>
-            <div class="field">
-              <div class="label">Submitted At</div>
-              <div class="value">${timestamp || new Date().toLocaleString()}</div>
-            </div>
-          </div>
+    // 3. Send Email to audit@solarreclaim.com via Resend or SMTP safely
+    const smtpHost = process.env.SMTP_HOST;
+    const smtpPort = process.env.SMTP_PORT || "587";
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
+    const smtpTo = process.env.SMTP_TO || "audit@solarreclaim.com";
+    const resendApiKey = process.env.RESEND_API_KEY;
 
-          ${additionalInfo ? `
-            <div class="notes-box">
-              <div class="notes-title">Additional Information & Notes</div>
-              <div class="value" style="font-style: italic; white-space: pre-wrap;">"${additionalInfo}"</div>
-            </div>
-          ` : ""}
-        </div>
-        <div class="footer">
-          This is an automated request generated from the SolarReclaim Audit Form.
-          <br>© ${new Date().getFullYear()} SolarReclaim
-        </div>
-      </div>
-    </body>
-    </html>
-  `;
+    if (resendApiKey) {
+      try {
+        console.log("[Email] Sending confirmation to lead via Resend API...");
+        const resendResponse = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${resendApiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "SolarReclaim Audits <onboarding@resend.dev>",
+            to: [email],
+            bcc: [smtpTo], // send copy to internal
+            subject: `SolarReclaim — Audit Request Confirmed`,
+            html: emailHtml,
+            reply_to: "audit@solarreclaim.com",
+          }),
+        });
 
-  // 3. Send Email to audit@solarreclaim.com
-  const smtpHost = process.env.SMTP_HOST;
-  const smtpPort = process.env.SMTP_PORT || "587";
-  const smtpUser = process.env.SMTP_USER;
-  const smtpPass = process.env.SMTP_PASS;
-  const smtpTo = process.env.SMTP_TO || "audit@solarreclaim.com";
-  const resendApiKey = process.env.RESEND_API_KEY;
-
-  if (resendApiKey) {
-    // Send email using Resend API (extremely simple, reliable, free tier)
-    try {
-      console.log("[Email] Sending via Resend API...");
-      const resendResponse = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${resendApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "SolarReclaim Audits <onboarding@resend.dev>", // default free domain, or custom
-          to: [smtpTo],
-          subject: `🚨 New Lead Audit: ${company || firstName}`,
-          html: emailHtml,
-          reply_to: email,
-        }),
-      });
-
-      if (resendResponse.ok) {
-        results.emailSuccess = true;
-        console.log(`[Email] Live notification sent via Resend API to ${smtpTo}`);
-      } else {
-        const errText = await resendResponse.text();
-        console.error(`[Email] Resend API returned error status ${resendResponse.status}: ${errText}`);
+        if (resendResponse.ok) {
+          results.emailSuccess = true;
+          console.log(`[Email] Confirmation successfully sent to ${email}`);
+        } else {
+          const errText = await resendResponse.text();
+          console.error(`[Email] Resend API returned error status ${resendResponse.status}: ${errText}`);
+        }
+      } catch (err: any) {
+        console.error("[Email] Resend API sending failed:", err.message);
       }
-    } catch (err: any) {
-      console.error("[Email] Resend API sending failed:", err.message);
     }
-  }
 
-  // If Resend is not configured, or if we want to fallback to standard SMTP
-  if (!results.emailSuccess && smtpHost && smtpUser && smtpPass) {
-    try {
-      console.log(`[Email] Sending via SMTP ${smtpHost}:${smtpPort}...`);
-      const transporter = nodemailer.createTransport({
-        host: smtpHost,
-        port: parseInt(smtpPort, 10),
-        secure: smtpPort === "465",
-        auth: {
-          user: smtpUser,
-          pass: smtpPass,
-        },
-      });
+    if (!results.emailSuccess && smtpHost && smtpUser && smtpPass) {
+      try {
+        console.log(`[Email] Sending confirmation via SMTP...`);
+        const transporter = nodemailer.createTransport({
+          host: smtpHost,
+          port: parseInt(smtpPort, 10),
+          secure: smtpPort === "465",
+          auth: {
+            user: smtpUser,
+            pass: smtpPass,
+          },
+        });
 
-      await transporter.sendMail({
-        from: `"SolarReclaim Onboarding" <${smtpUser}>`,
-        to: smtpTo,
-        subject: `🚨 New Lead Audit: ${company || firstName}`,
-        html: emailHtml,
-        replyTo: email,
-      });
+        await transporter.sendMail({
+          from: `"SolarReclaim Audits" <${smtpUser}>`,
+          to: email,
+          bcc: smtpTo, // send copy to internal
+          subject: `SolarReclaim — Audit Request Confirmed`,
+          html: emailHtml,
+          replyTo: "audit@solarreclaim.com",
+        });
 
-      results.emailSuccess = true;
-      console.log(`[Email] Live notification email sent via SMTP host to ${smtpTo}`);
-    } catch (err: any) {
-      console.error("[Email] SMTP sending failed:", err.message);
+        results.emailSuccess = true;
+        console.log(`[Email] Confirmation successfully sent via SMTP to ${email}`);
+      } catch (err: any) {
+        console.error("[Email] SMTP sending failed:", err.message);
+      }
     }
-  }
 
-  // If no live email provider is configured yet, we log it and provide a beautiful simulated response message
-  if (!results.emailSuccess) {
-    console.warn("[Email] Live email setup was not active because SMTP_USER or RESEND_API_KEY credentials are not filled yet in the platform's Environment Settings.");
-    console.log("---- SIMULATED EMAIL CONTENT START ----");
-    console.log(`To: ${smtpTo}`);
-    console.log(`Subject: 🚨 New Lead Audit: ${company || firstName}`);
-    console.log(`Content:\n${firstName} ${lastName} (${email}) requested an audit with ${agedLeads} aged leads.`);
-    console.log("---- SIMULATED EMAIL CONTENT END ----");
-    
-    results.message = "Form submitted successfully to Make.com! Note: To activate live email routing to audit@solarreclaim.com, please add SMTP_USER/SMTP_PASS or RESEND_API_KEY to your applet environment variables in settings.";
-  } else {
-    results.message = `Audit request submitted successfully and email notification sent to ${smtpTo}!`;
-  }
+    // Clean simulation visual logs when no live email provider has credentials defined
+    if (!results.emailSuccess) {
+      console.log("---- SIMULATED EMAIL CONTENT START ----");
+      console.log(`To: ${email}`);
+      console.log(`Bcc: ${smtpTo}`);
+      console.log(`Subject: SolarReclaim — Audit Request Confirmed`);
+      console.log(`Lead Name: ${fullName}`);
+      console.log(`Company: ${companyName}`);
+      console.log(`Leads: ${leadCount}`);
+      console.log("---- SIMULATED EMAIL CONTENT END ----");
+      
+      results.message = "Form submitted successfully to Make.com! Make sure RESEND_API_KEY or SMTP credentials are set in environment variables for live standard email triggers.";
+    } else {
+      results.message = `Audit request submitted successfully and confirmation sent to ${email}!`;
+    }
 
-  res.json(results);
+    res.json(results);
   } catch (globalErr: any) {
     console.error("[Root Handler Error]: Failed processing audit submit", globalErr);
     res.status(500).json({ error: globalErr.message || "Internal Server Error in audit submit handler" });
@@ -313,26 +352,25 @@ async function bootstrap() {
       __dirname,
       path.join(__dirname, "..", "dist")
     ];
-    
-    let distPath = possiblePaths[0];
+
+    let staticPath = possiblePaths[0];
     for (const p of possiblePaths) {
-      if (fs.existsSync(path.join(p, "index.html"))) {
-        distPath = p;
+      if (fs.existsSync(p)) {
+        staticPath = p;
         break;
       }
     }
-    console.log(`Serving static files from: ${distPath}`);
-    app.use(express.static(distPath));
+    
+    console.log("Serving static assets from:", staticPath);
+    app.use(express.static(staticPath));
     app.get("*", (req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
+      res.sendFile(path.join(staticPath, "index.html"));
     });
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Express full-stack server listening on http://localhost:${PORT}`);
+    console.log(`Server running on http://0.0.0.0:${PORT}`);
   });
 }
 
-bootstrap().catch((err) => {
-  console.error("Critical error bootstrapping express server:", err);
-});
+bootstrap();
